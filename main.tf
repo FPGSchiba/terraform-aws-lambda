@@ -69,12 +69,12 @@ resource "null_resource" "build" {
   count = local.is_go_build_lambda ? 1 : 0
 
   triggers = {
-    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*"): filesha1("${var.code_dir}/${f}")]))
+    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*") : filesha1("${var.code_dir}/${f}")]))
     file_exists = fileexists(local.build_input_file)
   }
 
   provisioner "local-exec" {
-    command = local.build_command
+    command     = local.build_command
     interpreter = local.is_linux ? ["bash", "-c"] : ["PowerShell", "-Command"]
   }
 }
