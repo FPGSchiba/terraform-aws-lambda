@@ -10,8 +10,14 @@ variable "code_dir" {
 
 variable "handler" {
   type        = string
-  default     = "main.lambda_handler"
+  default     = null
   description = "Lambda handler"
+}
+
+variable "main_filename" {
+  type        = string
+  description = "Main filename of the lambda function (only needed for go Lambda functions)"
+  default     = "main.go"
 }
 
 variable "runtime" {

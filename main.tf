@@ -65,18 +65,47 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.lambda.arn
 }
 
-data "archive_file" "init" {
+resource "null_resource" "build" {
+  count = local.is_go_build_lambda ? 1 : 0
+
+  triggers = {
+    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*"): filesha1("${var.code_dir}/${f}")]))
+    file_exists = fileexists(local.build_input_file)
+  }
+
+  provisioner "local-exec" {
+    command = local.build_command
+    interpreter = local.is_linux ? ["bash", "-c"] : ["PowerShell", "-Command"]
+  }
+}
+
+data "archive_file" "non_build" {
+  count = local.is_go_build_lambda ? 0 : 1
+
   type        = "zip"
   source_dir  = var.code_dir
   output_path = local.output_file
 }
+
+data "archive_file" "build" {
+  count = local.is_go_build_lambda ? 1 : 0
+
+  type        = "zip"
+  source_file = local.build_output_file
+  output_path = local.output_file
+
+  depends_on = [
+    null_resource.build
+  ]
+}
+
 resource "aws_lambda_function" "lambda" {
-  filename         = data.archive_file.init.output_path
+  filename         = local.is_go_build_lambda ? data.archive_file.build[0].output_path : data.archive_file.non_build[0].output_path
   function_name    = var.name
   role             = aws_iam_role.lambda.arn
-  handler          = var.handler
+  handler          = local.is_go_build_lambda ? "bootstrap" : var.handler
   runtime          = var.runtime
-  source_code_hash = data.archive_file.init.output_base64sha256
+  source_code_hash = local.is_go_build_lambda ? data.archive_file.build[0].output_base64sha256 : data.archive_file.non_build[0].output_base64sha256
   timeout          = var.timeout
   layers           = var.layer_arns
 
