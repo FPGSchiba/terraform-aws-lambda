@@ -1,0 +1,5 @@
+# version defines the version of the config.yml configuration format. Currently the only option is 1.
+version: 1
+
+# module_version defines the version of the module to publish.
+module_version: 1.1.0
