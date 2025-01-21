@@ -13,9 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: SEmver Tag
-        uses: K-Phoen/semver-tag-action@v1
+      - name: Semver Tag
+        uses: semver-release-action@v1
         with:
-          release_branch: master
+          release_branch: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
