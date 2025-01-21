@@ -4,16 +4,40 @@ A module to easy build and deploy GoLang and Python Lambda functions.
 
 ## Usage
 
+### Python
+
 ```hcl
 module "lambda" {
   source = "github.com/elastic-infra/terraform-aws-lambda"
 
   name = "my-lambda"
-  code_dir = "${path.module}/lambda"
+  code_dir = "${path.module}/lambda" # Directory with the python code
   runtime = "python3.8"
   handler = "lambda.handler"
   environment_variables = {
     "ENV_VAR" = "value"
+  }
+}
+```
+
+### Go
+
+```hcl
+module "lambda" {
+  source = "github.com/elastic-infra/terraform-aws-lambda"
+
+  code_dir       = "${path.module}/src/" # Directory with the go code
+  name           = "${var.random_prefix}-test-lambda"
+  enable_tracing = true
+  runtime        = "provided.al2"
+  additional_iam_statements = [
+    {
+      actions   = ["s3:PutObject"]
+      resources = [aws_s3_bucket.test.arn, "${aws_s3_bucket.test.arn}/*"]
+    }
+  ]
+  environment_variables = {
+    "RECEIPT_BUCKET" = aws_s3_bucket.test.bucket
   }
 }
 ```
