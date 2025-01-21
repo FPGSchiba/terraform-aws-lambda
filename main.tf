@@ -65,16 +65,16 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.lambda.arn
 }
 
-resource "null_resource" "build" {
+resource "terraform_data" "build" {
   count = local.is_go_build_lambda ? 1 : 0
 
-  triggers = {
-    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*"): filesha1("${var.code_dir}/${f}")]))
+  triggers_replace = {
+    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*") : filesha1("${var.code_dir}/${f}")]))
     file_exists = fileexists(local.build_input_file)
   }
 
   provisioner "local-exec" {
-    command = local.build_command
+    command     = local.build_command
     interpreter = local.is_linux ? ["bash", "-c"] : ["PowerShell", "-Command"]
   }
 }
@@ -95,7 +95,7 @@ data "archive_file" "build" {
   output_path = local.output_file
 
   depends_on = [
-    null_resource.build
+    terraform_data.build
   ]
 }
 
