@@ -2,6 +2,22 @@
 
 A module to easy build and deploy GoLang and Python Lambda functions.
 
+## Usage
+
+```hcl
+module "lambda" {
+  source = "github.com/elastic-infra/terraform-aws-lambda"
+
+  name = "my-lambda"
+  code_dir = "${path.module}/lambda"
+  runtime = "python3.8"
+  handler = "lambda.handler"
+  environment_variables = {
+    "ENV_VAR" = "value"
+  }
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
