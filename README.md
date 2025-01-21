@@ -1,5 +1,7 @@
 # terraform-aws-lambda
 
+A module to easy build and deploy GoLang and Python Lambda functions.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
