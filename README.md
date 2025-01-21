@@ -52,6 +52,7 @@ module "lambda" {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | >= 2.2 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5 |
+| <a name="requirement_uname"></a> [uname](#requirement\_uname) | 0.2.3 |
 
 ## Providers
 
@@ -60,6 +61,7 @@ module "lambda" {
 | <a name="provider_archive"></a> [archive](#provider\_archive) | >= 2.2 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
+| <a name="provider_uname"></a> [uname](#provider\_uname) | 0.2.3 |
 
 ## Modules
 
@@ -79,6 +81,7 @@ No modules.
 | [archive_file.non_build](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_iam_policy_document.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [uname_uname.localhost](https://registry.terraform.io/providers/julienlevasseur/uname/0.2.3/docs/data-sources/uname) | data source |
 
 ## Inputs
 
@@ -92,7 +95,7 @@ No modules.
 | <a name="input_layer_arns"></a> [layer\_arns](#input\_layer\_arns) | Layers attached to the lambda function | `list(string)` | `[]` | no |
 | <a name="input_main_filename"></a> [main\_filename](#input\_main\_filename) | Main filename of the lambda function (only needed for go Lambda functions) | `string` | `"main.go"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the lambda function | `string` | n/a | yes |
-| <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime | `string` | `"python3.8"` | no |
+| <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime | `string` | `"provided.al2"` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Number of seconds, unitl the lmabda timeouts | `number` | `3` | no |
 
 ## Outputs
