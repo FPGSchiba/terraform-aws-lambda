@@ -2,6 +2,8 @@
 
 A module to easy build and deploy GoLang and Python Lambda functions.
 
+This module is now fully on spacelift.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
