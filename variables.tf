@@ -22,7 +22,7 @@ variable "main_filename" {
 
 variable "runtime" {
   type        = string
-  default     = "python3.8"
+  default     = "provided.al2"
   description = "Lambda runtime"
 }
 

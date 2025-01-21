@@ -22,6 +22,8 @@ module "lambda" {
 
 ### Go
 
+It detects go automatically, when `handler == null` (default) and `runtime == "provided.al2"`. 
+
 ```hcl
 module "lambda" {
   source = "github.com/elastic-infra/terraform-aws-lambda"
