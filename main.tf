@@ -65,7 +65,7 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.lambda.arn
 }
 
-resource "null_resource" "build" {
+resource "terraform_data" "build" {
   count = local.is_go_build_lambda ? 1 : 0
 
   triggers = {
@@ -95,7 +95,7 @@ data "archive_file" "build" {
   output_path = local.output_file
 
   depends_on = [
-    null_resource.build
+    terraform_data.build
   ]
 }
 
