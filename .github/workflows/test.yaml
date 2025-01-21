@@ -1,6 +1,10 @@
 name: Test
 on: pull_request_target
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test:
     name: Test
@@ -14,7 +18,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: "1.10.1"
+          terraform_version: "1.10"
 
       - name: Terraform Init
         run: terraform init
