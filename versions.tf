@@ -10,5 +10,9 @@ terraform {
       source  = "hashicorp/archive"
       version = ">= 2.2"
     }
+    uname = {
+      source = "julienlevasseur/uname"
+      version = "0.2.3"
+    }
   }
 }
