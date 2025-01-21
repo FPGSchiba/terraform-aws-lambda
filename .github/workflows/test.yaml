@@ -1,12 +1,11 @@
 name: Test
 on: pull_request_target
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   test:
+    permissions:
+      id-token: write
+      contents: read
     name: Test
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +23,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::867344431996:role/terratest-github-terraform-aws-lambda
-          role-session-name: terratest-github-terraform-aws-lambda
+          role-session-name: lambda
           aws-region: eu-central-1
           audience: sts.amazonaws.com
 
