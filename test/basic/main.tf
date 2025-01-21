@@ -2,7 +2,7 @@ provider "aws" {
   region = "eu-central-1"
   default_tags {
     tags = {
-      "test" = "true"
+      "test"   = "true"
       "module" = "terraform-aws-lambda"
     }
   }
@@ -20,7 +20,7 @@ variable "runtime" {
 }
 
 resource "aws_s3_bucket" "test" {
-  bucket = "${lower(var.random_prefix)}-test-bucket"
+  bucket        = "${lower(var.random_prefix)}-test-bucket"
   force_destroy = true
 }
 

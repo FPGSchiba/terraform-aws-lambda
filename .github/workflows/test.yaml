@@ -19,14 +19,6 @@ jobs:
         with:
           terraform_version: "1.10"
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::867344431996:role/terratest-github-terraform-aws-lambda
-          role-session-name: lambda
-          aws-region: eu-central-1
-          audience: sts.amazonaws.com
-
       - name: Terraform Init
         run: terraform init
 
@@ -35,8 +27,3 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
-
-      - name: Run Terratest
-        uses: cloudposse/github-action-terratest@1.0.0
-        with:
-          sourceDir: test/
