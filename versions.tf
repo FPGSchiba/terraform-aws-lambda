@@ -11,7 +11,7 @@ terraform {
       version = ">= 2.2"
     }
     uname = {
-      source = "julienlevasseur/uname"
+      source  = "julienlevasseur/uname"
       version = "0.2.3"
     }
   }
