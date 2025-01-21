@@ -20,6 +20,13 @@ jobs:
         with:
           terraform_version: "1.10"
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::867344431996:role/terratest-github-terraform-aws-lambda
+          role-session-name: terratest-github-terraform-aws-lambda
+          aws-region: eu-central-1
+
       - name: Terraform Init
         run: terraform init
 
