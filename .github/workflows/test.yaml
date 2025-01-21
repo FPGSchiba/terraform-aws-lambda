@@ -26,6 +26,6 @@ jobs:
         run: terraform validate
 
       - name: Run Terratest
-        uses: cloudposse/github-action-terratest@main
+        uses: cloudposse/github-action-terratest@v1
         with:
           sourceDir: test/
