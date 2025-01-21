@@ -26,6 +26,7 @@ jobs:
           role-to-assume: arn:aws:iam::867344431996:role/terratest-github-terraform-aws-lambda
           role-session-name: terratest-github-terraform-aws-lambda
           aws-region: eu-central-1
+          audience: sts.amazonaws.com
 
       - name: Terraform Init
         run: terraform init
