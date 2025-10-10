@@ -52,7 +52,7 @@ jobs:
         working-directory: test/
         run: |
           go install github.com/jstemmer/go-junit-report@latest
-          go test -v ./... | go-junit-report -set-exit-code > report.xml
+          go test -v ./... | tee test.log | go-junit-report -set-exit-code > report.xml
 
       - name: Post Test Summary
         uses: test-summary/action@v2
