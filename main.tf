@@ -1,6 +1,8 @@
 resource "aws_cloudwatch_log_group" "lambda" {
   name              = "/aws/lambda/${var.name}"
   retention_in_days = 14
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "lambda_assume" {
@@ -53,11 +55,15 @@ resource "aws_iam_policy" "lambda" {
   name   = "${var.name}-lambda-policy"
   path   = "/"
   policy = data.aws_iam_policy_document.lambda.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_role" "lambda" {
   name               = "${var.name}-lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
@@ -122,4 +128,15 @@ resource "aws_lambda_function" "lambda" {
       mode = "Active"
     }
   }
+
+  dynamic "vpc_config" {
+    for_each = length(var.security_groups) == 0 ? [] : [{}]
+    content {
+      security_group_ids          = [for sg in aws_security_group.this : sg.id]
+      subnet_ids                  = var.subnet_ids
+      ipv6_allowed_for_dual_stack = true
+    }
+  }
+
+  tags = var.tags
 }

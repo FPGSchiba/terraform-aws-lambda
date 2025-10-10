@@ -49,7 +49,7 @@ module "lambda" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | >= 2.2 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5 |
 | <a name="requirement_uname"></a> [uname](#requirement\_uname) | 0.2.3 |
@@ -76,6 +76,11 @@ No modules.
 | [aws_iam_role.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.lambda_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lambda_function.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
+| [aws_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_vpc_security_group_egress_rule.this_ipv4](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_egress_rule.this_ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.this_ipv4](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.this_ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [terraform_data.build](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
 | [archive_file.build](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [archive_file.non_build](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
@@ -96,6 +101,9 @@ No modules.
 | <a name="input_main_filename"></a> [main\_filename](#input\_main\_filename) | Main filename of the lambda function (only needed for go Lambda functions) | `string` | `"main.go"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the lambda function | `string` | n/a | yes |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime | `string` | `"provided.al2"` | no |
+| <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of security group rules to apply | <pre>list(object({<br/>    name        = string<br/>    description = string<br/>    ingress_rules = list(object({<br/>      type        = string<br/>      from_port   = optional(number)<br/>      to_port     = optional(number)<br/>      ip_protocol = string<br/>      cidr_block  = string<br/>    }))<br/>    egress_rules = list(object({<br/>      type        = string<br/>      from_port   = optional(number)<br/>      to_port     = optional(number)<br/>      ip_protocol = string<br/>      cidr_block  = string<br/>    }))<br/>  }))</pre> | `[]` | no |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs to place the lambda function in | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to the resources | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Number of seconds, unitl the lmabda timeouts | `number` | `3` | no |
 
 ## Outputs

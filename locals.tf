@@ -1,5 +1,3 @@
-data "uname" "localhost" {}
-
 locals {
   elements           = split("/", trimsuffix(var.code_dir, "/"))
   is_go_build_lambda = var.runtime == "provided.al2" && var.handler == null
@@ -11,4 +9,51 @@ locals {
 
 locals {
   output_file = "${join("/", slice(local.elements, 0, length(local.elements) - 1))}/${var.name}.zip"
+}
+
+locals {
+  ipv4_rules_ingress = flatten([
+    for sg in var.security_groups : [
+      for rule in sg.ingress_rules : {
+        security_group_name = sg.name
+        from_port           = lookup(rule, "from_port", null)
+        to_port             = lookup(rule, "to_port", null)
+        ip_protocol         = rule.ip_protocol
+        cidr_block          = rule.cidr_block
+      } if rule.type == "ipv4"
+    ]
+  ])
+  ipv6_rules_ingress = flatten([
+    for sg in var.security_groups : [
+      for rule in sg.ingress_rules : {
+        security_group_name = sg.name
+        from_port           = lookup(rule, "from_port", null)
+        to_port             = lookup(rule, "to_port", null)
+        ip_protocol         = rule.ip_protocol
+        cidr_block          = rule.cidr_block
+      } if rule.type == "ipv6"
+    ]
+  ])
+  ipv4_rules_egress = flatten([
+    for sg in var.security_groups : [
+      for rule in sg.egress_rules : {
+        security_group_name = sg.name
+        from_port           = lookup(rule, "from_port", null)
+        to_port             = lookup(rule, "to_port", null)
+        ip_protocol         = rule.ip_protocol
+        cidr_block          = rule.cidr_block
+      } if rule.type == "ipv4"
+    ]
+  ])
+  ipv6_rules_egress = flatten([
+    for sg in var.security_groups : [
+      for rule in sg.egress_rules : {
+        security_group_name = sg.name
+        from_port           = lookup(rule, "from_port", null)
+        to_port             = lookup(rule, "to_port", null)
+        ip_protocol         = rule.ip_protocol
+        cidr_block          = rule.cidr_block
+      } if rule.type == "ipv6"
+    ]
+  ])
 }

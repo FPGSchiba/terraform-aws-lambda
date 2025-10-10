@@ -58,3 +58,47 @@ variable "enable_tracing" {
   default     = false
   description = "Enable active tracing"
 }
+
+variable "security_groups" {
+  description = "List of security group rules to apply"
+  type = list(object({
+    name        = string
+    description = string
+    ingress_rules = list(object({
+      type        = string
+      from_port   = optional(number)
+      to_port     = optional(number)
+      ip_protocol = string
+      cidr_block  = string
+    }))
+    egress_rules = list(object({
+      type        = string
+      from_port   = optional(number)
+      to_port     = optional(number)
+      ip_protocol = string
+      cidr_block  = string
+    }))
+  }))
+  validation {
+    condition = alltrue([
+      for sg in var.security_groups : alltrue([
+        alltrue([for rule in sg.ingress_rules : contains(["ipv4", "ipv6"], rule.type)]),
+        alltrue([for rule in sg.egress_rules : contains(["ipv4", "ipv6"], rule.type)])
+      ])
+    ])
+    error_message = "Each rule.type must be either 'ipv4' or 'ipv6'."
+  }
+  default = []
+}
+
+variable "tags" {
+  description = "A map of tags to assign to the resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs to place the lambda function in"
+  type        = list(string)
+  default     = []
+}
