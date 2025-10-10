@@ -23,3 +23,16 @@ jobs:
         with:
           bump: ${{ steps.bump.outputs.match }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.match != 'none'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.bump.outputs.new_version }}
+          name: Release ${{ steps.bump.outputs.new_version }}
+          body: |
+            ## What's New
+            See the [changelog](https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }})
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
