@@ -12,9 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Semver Tag
-        uses: K-Phoen/semver-release-action@v1.3.2
+      - id: bump
+        name: Determine version bump
+        uses: zwaldowski/match-label-action@v5
         with:
-          release_branch: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          allowed: major, minor, patch
+
+      - uses: zwaldowski/semver-release-action@v4
+        name: Create Release
+        with:
+          bump: ${{ steps.bump.outputs.match }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
