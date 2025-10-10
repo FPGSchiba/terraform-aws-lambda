@@ -97,8 +97,8 @@ variable "tags" {
   default     = {}
 }
 
-variable "subnet_ids" {
-  description = "List of subnet IDs to place the lambda function in"
-  type        = list(string)
-  default     = []
+variable "vpc_id" {
+  description = "The ID of the VPC where the lambda function will be deployed"
+  type        = string
+  default     = null
 }

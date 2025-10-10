@@ -46,7 +46,8 @@ module "lambda" {
 
 ### With VPC
 
-To enable VPC support, provide `subnet_ids` and `security_groups` parameters.
+To enable VPC support, provide `vpc_id` parameter.
+It always gives the lambda access to all subnets in the VPC.
 IPv6 Dual stack is always enabled on the lambda.
 The `type` field in the security group rules can be either `ipv4` or `ipv6`.
 
@@ -58,7 +59,7 @@ module "lambda" {
   code_dir = "${path.module}/lambda" # Directory with the python code
   runtime = "python3.8"
   handler = "lambda.handler"
-  subnet_ids = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
+  vpc_id = aws_vpc.main.id
   security_groups = [
     {
       name        = "allow-http"

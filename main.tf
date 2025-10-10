@@ -130,10 +130,10 @@ resource "aws_lambda_function" "lambda" {
   }
 
   dynamic "vpc_config" {
-    for_each = length(var.security_groups) == 0 ? [] : [{}]
+    for_each = var.vpc_id == null ? [] : [{}]
     content {
       security_group_ids          = [for sg in aws_security_group.this : sg.id]
-      subnet_ids                  = var.subnet_ids
+      subnet_ids                  = data.aws_subnets.this.ids
       ipv6_allowed_for_dual_stack = true
     }
   }
