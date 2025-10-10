@@ -44,6 +44,51 @@ module "lambda" {
 }
 ```
 
+### With VPC
+
+To enable VPC support, provide `subnet_ids` and `security_groups` parameters.
+IPv6 Dual stack is always enabled on the lambda.
+The `type` field in the security group rules can be either `ipv4` or `ipv6`.
+
+```hcl
+module "lambda" {
+  source = "github.com/elastic-infra/terraform-aws-lambda"
+
+  name    = "my-lambda"
+  code_dir = "${path.module}/lambda" # Directory with the python code
+  runtime = "python3.8"
+  handler = "lambda.handler"
+  subnet_ids = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
+  security_groups = [
+    {
+      name        = "allow-http"
+      description = "Allow HTTP inbound traffic"
+      ingress_rules = [
+        {
+          type        = "ipv4"
+          from_port   = 80
+          to_port     = 80
+          ip_protocol = "tcp"
+          cidr_block  = "0.0.0.0/0"
+        }
+      ]
+      egress_rules = [
+        {
+          type        = "ipv4"
+          from_port   = 0
+          to_port     = 0
+          ip_protocol = "-1"
+          cidr_block  = "0.0.0.0/0"
+        }
+      ]
+    }
+  ]
+  environment_variables = {
+    "ENV_VAR" = "value"
+  }
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
