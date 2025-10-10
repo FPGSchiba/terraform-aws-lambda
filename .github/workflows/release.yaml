@@ -22,7 +22,7 @@ jobs:
         name: Create Release
         with:
           bump: ${{ steps.bump.outputs.match }}
-          prefix: 'v'
+          prefix: "v"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
