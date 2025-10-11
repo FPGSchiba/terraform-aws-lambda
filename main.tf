@@ -75,8 +75,7 @@ resource "terraform_data" "build" {
   count = local.is_go_build_lambda ? 1 : 0
 
   triggers_replace = {
-    dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*") : filesha1("${var.code_dir}/${f}")]))
-    file_exists = fileexists(local.build_input_file)
+    dir_sha1 = sha1(join("", [for f in fileset(var.code_dir, "*") : filesha1("${var.code_dir}/${f}")]))
   }
 
   provisioner "local-exec" {
