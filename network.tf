@@ -14,7 +14,16 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
-  for_each = var.vpc_id == null ? {} : { for rule in local.ipv4_rules_ingress : "${rule.security_group_name}-${rule.ip_protocol}-${replace(rule.cidr_block, "/", "-")}" => rule }
+  for_each = var.vpc_id == null ? {} : {
+    for pair in flatten([
+      for rule in local.ipv4_rules_ingress : [
+        for cidr in rule.cidr_blocks : {
+          key   = "${rule.security_group_name}-${rule.ip_protocol}-${replace(cidr, "/", "-")}"
+          value = merge(rule, { cidr_block = cidr })
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv4         = each.value.cidr_block
@@ -24,7 +33,16 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
-  for_each = var.vpc_id == null ? {} : { for rule in local.ipv6_rules_ingress : "${rule.security_group_name}-${rule.ip_protocol}-${replace(rule.cidr_block, "/", "-")}" => rule }
+  for_each = var.vpc_id == null ? {} : {
+    for pair in flatten([
+      for rule in local.ipv6_rules_ingress : [
+        for cidr in rule.cidr_blocks : {
+          key   = "${rule.security_group_name}-${rule.ip_protocol}-${replace(cidr, "/", "-")}"
+          value = merge(rule, { cidr_block = cidr })
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv6         = each.value.cidr_block
@@ -34,7 +52,16 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
-  for_each = var.vpc_id == null ? {} : { for rule in local.ipv4_rules_egress : "${rule.security_group_name}-${rule.ip_protocol}-${replace(rule.cidr_block, "/", "-")}" => rule }
+  for_each = var.vpc_id == null ? {} : {
+    for pair in flatten([
+      for rule in local.ipv4_rules_egress : [
+        for cidr in rule.cidr_blocks : {
+          key   = "${rule.security_group_name}-${rule.ip_protocol}-${replace(cidr, "/", "-")}"
+          value = merge(rule, { cidr_block = cidr })
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv4         = each.value.cidr_block
@@ -44,7 +71,16 @@ resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this_ipv6" {
-  for_each = var.vpc_id == null ? {} : { for rule in local.ipv6_rules_egress : "${rule.security_group_name}-${rule.ip_protocol}-${replace(rule.cidr_block, "/", "-")}" => rule }
+  for_each = var.vpc_id == null ? {} : {
+    for pair in flatten([
+      for rule in local.ipv6_rules_egress : [
+        for cidr in rule.cidr_blocks : {
+          key   = "${rule.security_group_name}-${rule.ip_protocol}-${replace(cidr, "/", "-")}"
+          value = merge(rule, { cidr_block = cidr })
+        }
+      ]
+    ]) : pair.key => pair.value
+  }
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv6         = each.value.cidr_block
@@ -52,4 +88,3 @@ resource "aws_vpc_security_group_egress_rule" "this_ipv6" {
   ip_protocol       = each.value.ip_protocol
   to_port           = each.value.to_port
 }
-

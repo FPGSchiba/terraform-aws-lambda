@@ -15,46 +15,46 @@ locals {
 locals {
   ipv4_rules_ingress = flatten([
     for sg in var.security_groups : [
-      for rule in sg.ingress_rules : {
+      for rule in sg.rules : {
         security_group_name = sg.name
         from_port           = lookup(rule, "from_port", null)
         to_port             = lookup(rule, "to_port", null)
         ip_protocol         = rule.ip_protocol
-        cidr_block          = rule.cidr_block
-      } if rule.type == "ipv4"
+        cidr_blocks         = rule.ipv4_cidr_blocks
+      } if rule.type == "ingress"
     ]
   ])
   ipv6_rules_ingress = flatten([
     for sg in var.security_groups : [
-      for rule in sg.ingress_rules : {
+      for rule in sg.rules : {
         security_group_name = sg.name
         from_port           = lookup(rule, "from_port", null)
         to_port             = lookup(rule, "to_port", null)
         ip_protocol         = rule.ip_protocol
-        cidr_block          = rule.cidr_block
-      } if rule.type == "ipv6"
+        cidr_blocks         = rule.ipv6_cidr_blocks
+      } if rule.type == "ingress"
     ]
   ])
   ipv4_rules_egress = flatten([
     for sg in var.security_groups : [
-      for rule in sg.egress_rules : {
+      for rule in sg.rules : {
         security_group_name = sg.name
         from_port           = lookup(rule, "from_port", null)
         to_port             = lookup(rule, "to_port", null)
         ip_protocol         = rule.ip_protocol
-        cidr_block          = rule.cidr_block
-      } if rule.type == "ipv4"
+        cidr_blocks         = rule.ipv4_cidr_blocks
+      } if rule.type == "egress"
     ]
   ])
   ipv6_rules_egress = flatten([
     for sg in var.security_groups : [
-      for rule in sg.egress_rules : {
+      for rule in sg.rules : {
         security_group_name = sg.name
         from_port           = lookup(rule, "from_port", null)
         to_port             = lookup(rule, "to_port", null)
         ip_protocol         = rule.ip_protocol
-        cidr_block          = rule.cidr_block
-      } if rule.type == "ipv6"
+        cidr_blocks         = rule.ipv6_cidr_blocks
+      } if rule.type == "egress"
     ]
   ])
 }

@@ -64,29 +64,22 @@ variable "security_groups" {
   type = list(object({
     name        = string
     description = string
-    ingress_rules = list(object({
-      type        = string
-      from_port   = optional(number)
-      to_port     = optional(number)
-      ip_protocol = string
-      cidr_block  = string
-    }))
-    egress_rules = list(object({
-      type        = string
-      from_port   = optional(number)
-      to_port     = optional(number)
-      ip_protocol = string
-      cidr_block  = string
+    rules = list(object({
+      type             = string
+      from_port        = optional(number)
+      to_port          = optional(number)
+      ip_protocol      = string
+      ipv4_cidr_blocks = list(string)
+      ipv6_cidr_blocks = list(string)
     }))
   }))
   validation {
     condition = alltrue([
       for sg in var.security_groups : alltrue([
-        alltrue([for rule in sg.ingress_rules : contains(["ipv4", "ipv6"], rule.type)]),
-        alltrue([for rule in sg.egress_rules : contains(["ipv4", "ipv6"], rule.type)])
+        alltrue([for rule in sg.rules : contains(["egress", "ingress"], rule.type)])
       ])
     ])
-    error_message = "Each rule.type must be either 'ipv4' or 'ipv6'."
+    error_message = "Each rule.type must be either 'egress' or 'ingress'."
   }
   default = []
 }
