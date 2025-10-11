@@ -29,6 +29,18 @@ data "aws_iam_policy_document" "lambda" {
   }
 
   dynamic "statement" {
+    for_each = var.vpc_networked ? [{}] : []
+    content {
+      actions = [
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface"
+      ]
+      resources = ["*"]
+    }
+  }
+
+  dynamic "statement" {
     for_each = var.enable_tracing ? [{}] : []
     content {
       actions = [
