@@ -90,6 +90,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "vpc_networked" {
+  description = "Whether to deploy the lambda function in a VPC"
+  type        = bool
+  default     = false
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC where the lambda function will be deployed"
   type        = string
