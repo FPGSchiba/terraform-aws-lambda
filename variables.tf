@@ -65,12 +65,12 @@ variable "security_groups" {
     name        = string
     description = string
     rules = list(object({
-      type              = string
-      from_port         = optional(number)
-      to_port           = optional(number)
-      ip_protocol       = string
-      ipv4_cidr_blocks  = list(string)
-      ipv6_cidr_blocks  = list(string)
+      type             = string
+      from_port        = optional(number)
+      to_port          = optional(number)
+      ip_protocol      = string
+      ipv4_cidr_blocks = list(string)
+      ipv6_cidr_blocks = list(string)
     }))
   }))
   validation {
