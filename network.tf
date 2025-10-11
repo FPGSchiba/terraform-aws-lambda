@@ -1,5 +1,5 @@
 resource "aws_security_group" "this" {
-  for_each = var.vpc_id == null ? {} : { for sg in var.security_groups : sg.name => sg }
+  for_each = var.vpc_networked ? { for sg in var.security_groups : sg.name => sg } : {}
 
   name_prefix = "${each.key}-"
   description = each.value.description
@@ -14,7 +14,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
-  for_each = var.vpc_id == null ? {} : {
+  for_each = var.vpc_networked ? {
     for pair in flatten([
       for rule in local.ipv4_rules_ingress : [
         for cidr in rule.cidr_blocks : {
@@ -23,7 +23,7 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
         }
       ]
     ]) : pair.key => pair.value
-  }
+  } : {}
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv4         = each.value.cidr_block
@@ -33,7 +33,7 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv4" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
-  for_each = var.vpc_id == null ? {} : {
+  for_each = var.vpc_networked ? {
     for pair in flatten([
       for rule in local.ipv6_rules_ingress : [
         for cidr in rule.cidr_blocks : {
@@ -42,7 +42,7 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
         }
       ]
     ]) : pair.key => pair.value
-  }
+  } : {}
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv6         = each.value.cidr_block
@@ -52,7 +52,7 @@ resource "aws_vpc_security_group_ingress_rule" "this_ipv6" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
-  for_each = var.vpc_id == null ? {} : {
+  for_each = var.vpc_networked ? {
     for pair in flatten([
       for rule in local.ipv4_rules_egress : [
         for cidr in rule.cidr_blocks : {
@@ -61,7 +61,7 @@ resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
         }
       ]
     ]) : pair.key => pair.value
-  }
+  } : {}
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv4         = each.value.cidr_block
@@ -71,7 +71,7 @@ resource "aws_vpc_security_group_egress_rule" "this_ipv4" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this_ipv6" {
-  for_each = var.vpc_id == null ? {} : {
+  for_each = var.vpc_networked ? {
     for pair in flatten([
       for rule in local.ipv6_rules_egress : [
         for cidr in rule.cidr_blocks : {
@@ -80,7 +80,7 @@ resource "aws_vpc_security_group_egress_rule" "this_ipv6" {
         }
       ]
     ]) : pair.key => pair.value
-  }
+  } : {}
 
   security_group_id = aws_security_group.this[each.value.security_group_name].id
   cidr_ipv6         = each.value.cidr_block
