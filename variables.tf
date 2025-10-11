@@ -102,3 +102,9 @@ variable "vpc_id" {
   type        = string
   default     = null
 }
+
+variable "go_build_tags" {
+  description = "Build tags for go build command"
+  type        = list(string)
+  default     = []
+}
