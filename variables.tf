@@ -90,6 +90,12 @@ variable "vpc_networked" {
   default     = false
 }
 
+variable "vpc_dualstack" {
+  description = "Whether to deploy the lambda function in a dualstack VPC (IPv4 and IPv6). Only used if vpc_networked is true."
+  type        = bool
+  default     = false
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC where the lambda function will be deployed"
   type        = string
