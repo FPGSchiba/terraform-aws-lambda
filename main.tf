@@ -76,7 +76,6 @@ resource "terraform_data" "build" {
 
   triggers_replace = {
     dir_sha1    = sha1(join("", [for f in fileset(var.code_dir, "*") : filesha1("${var.code_dir}/${f}")]))
-    file_exists = fileexists(local.build_input_file)
   }
 
   provisioner "local-exec" {
