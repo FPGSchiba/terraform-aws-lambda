@@ -5,7 +5,7 @@ locals {
   build_output_file  = "./tf_generated/${var.name}/bootstrap"
   build_input_file   = "${trimsuffix(var.code_dir, "/")}/${var.main_filename}"
   build_tags         = join(" ", var.go_build_tags)
-  build_command      = local.is_linux ? "cd ${var.code_dir} && go mod tidy && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOFLAGS=-trimpath go build -mod=readonly -ldflags='-s -w' -tags \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" \"${abspath(local.build_input_file)}\"" : "$Env:GOOS=\"linux\"; $Env:GOARCH=\"amd64\"; cd \"${var.code_dir}\"; go mod tidy; go build \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" \"${abspath(local.build_input_file)}\""
+  build_command      = local.is_linux ? "cd ${var.code_dir} && go mod tidy && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOFLAGS=-trimpath go build -mod=readonly -ldflags='-s -w' -tags \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" \"${abspath(local.build_input_file)}\"" : "$Env:GOOS=\"linux\"; $Env:GOARCH=\"amd64\"; cd \"${var.code_dir}\"; go mod tidy; go build -tags \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" \"${abspath(local.build_input_file)}\""
 }
 
 locals {
