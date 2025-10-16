@@ -102,6 +102,12 @@ variable "vpc_id" {
   default     = null
 }
 
+variable "subnet_ids" {
+  description = "The IDs of the subnets where the lambda function will be deployed"
+  type        = list(string)
+  default     = []
+}
+
 variable "go_build_tags" {
   description = "Build tags for go build command"
   type        = list(string)

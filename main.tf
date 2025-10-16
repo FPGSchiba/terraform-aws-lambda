@@ -144,7 +144,7 @@ resource "aws_lambda_function" "lambda" {
     for_each = var.vpc_id == null ? [] : [{}]
     content {
       security_group_ids          = [for sg in aws_security_group.this : sg.id]
-      subnet_ids                  = data.aws_subnets.this[0].ids
+      subnet_ids                  = var.subnet_ids
       ipv6_allowed_for_dual_stack = var.vpc_dualstack
     }
   }
