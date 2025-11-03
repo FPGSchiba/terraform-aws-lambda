@@ -6,10 +6,10 @@ locals {
   build_tags         = join(" ", var.go_build_tags)
 
   # Construct ldflags string from map
-  base_ldflags      = "-s -w"
-  x_flags           = [for key, value in var.go_additional_ldflags : "-X ${key}=${value}"]
-  custom_ldflags    = join(" ", local.x_flags)
-  combined_ldflags  = local.custom_ldflags != "" ? "${local.base_ldflags} ${local.custom_ldflags}" : local.base_ldflags
+  base_ldflags     = "-s -w"
+  x_flags          = [for key, value in var.go_additional_ldflags : "-X ${key}=${value}"]
+  custom_ldflags   = join(" ", local.x_flags)
+  combined_ldflags = local.custom_ldflags != "" ? "${local.base_ldflags} ${local.custom_ldflags}" : local.base_ldflags
 
   # Build commands with ldflags support
   build_command = local.is_linux ? "cd ${var.code_dir} && go mod tidy && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOFLAGS=-trimpath go build -mod=readonly -ldflags='${local.combined_ldflags}' -tags \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" ." : "$Env:GOOS=\"linux\"; $Env:GOARCH=\"amd64\"; cd \"${var.code_dir}\"; go mod tidy; go build -ldflags='${local.combined_ldflags}' -tags \"${local.build_tags}\" -o \"${abspath(local.build_output_file)}\" ."
