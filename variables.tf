@@ -113,3 +113,9 @@ variable "go_build_tags" {
   type        = list(string)
   default     = []
 }
+
+variable "go_additional_ldflags" {
+  description = "Additional -X ldflags for go build command as key-value pairs (e.g., {\"github.com/fpgschiba/volleygoals/router.SelectedHandler\" = \"GetTeam\"})"
+  type        = map(string)
+  default     = {}
+}

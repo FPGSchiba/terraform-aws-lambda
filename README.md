@@ -132,6 +132,7 @@ No modules.
 | [archive_file.non_build](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_iam_policy_document.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 | [uname_uname.localhost](https://registry.terraform.io/providers/julienlevasseur/uname/0.2.3/docs/data-sources/uname) | data source |
 
 ## Inputs
@@ -142,15 +143,19 @@ No modules.
 | <a name="input_code_dir"></a> [code\_dir](#input\_code\_dir) | Path to the code directory | `string` | n/a | yes |
 | <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | Enable active tracing | `bool` | `false` | no |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables used by the function | `map(string)` | `{}` | no |
+| <a name="input_go_additional_ldflags"></a> [go\_additional\_ldflags](#input\_go\_additional\_ldflags) | Additional -X ldflags for go build command as key-value pairs (e.g., {"github.com/fpgschiba/volleygoals/router.SelectedHandler" = "GetTeam"}) | `map(string)` | `{}` | no |
+| <a name="input_go_build_tags"></a> [go\_build\_tags](#input\_go\_build\_tags) | Build tags for go build command | `list(string)` | `[]` | no |
 | <a name="input_handler"></a> [handler](#input\_handler) | Lambda handler | `string` | `null` | no |
 | <a name="input_layer_arns"></a> [layer\_arns](#input\_layer\_arns) | Layers attached to the lambda function | `list(string)` | `[]` | no |
-| <a name="input_main_filename"></a> [main\_filename](#input\_main\_filename) | Main filename of the lambda function (only needed for go Lambda functions) | `string` | `"main.go"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the lambda function | `string` | n/a | yes |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime | `string` | `"provided.al2"` | no |
-| <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of security group rules to apply | <pre>list(object({<br/>    name        = string<br/>    description = string<br/>    ingress_rules = list(object({<br/>      type        = string<br/>      from_port   = optional(number)<br/>      to_port     = optional(number)<br/>      ip_protocol = string<br/>      cidr_block  = string<br/>    }))<br/>    egress_rules = list(object({<br/>      type        = string<br/>      from_port   = optional(number)<br/>      to_port     = optional(number)<br/>      ip_protocol = string<br/>      cidr_block  = string<br/>    }))<br/>  }))</pre> | `[]` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs to place the lambda function in | `list(string)` | `[]` | no |
+| <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of security group rules to apply | <pre>list(object({<br/>    name        = string<br/>    description = string<br/>    rules = list(object({<br/>      type             = string<br/>      from_port        = optional(number)<br/>      to_port          = optional(number)<br/>      ip_protocol      = string<br/>      ipv4_cidr_blocks = list(string)<br/>      ipv6_cidr_blocks = list(string)<br/>    }))<br/>  }))</pre> | `[]` | no |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The IDs of the subnets where the lambda function will be deployed | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to the resources | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Number of seconds, unitl the lmabda timeouts | `number` | `3` | no |
+| <a name="input_vpc_dualstack"></a> [vpc\_dualstack](#input\_vpc\_dualstack) | Whether to deploy the lambda function in a dualstack VPC (IPv4 and IPv6). Only used if vpc\_networked is true. | `bool` | `false` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC where the lambda function will be deployed | `string` | `null` | no |
+| <a name="input_vpc_networked"></a> [vpc\_networked](#input\_vpc\_networked) | Whether to deploy the lambda function in a VPC | `bool` | `false` | no |
 
 ## Outputs
 
