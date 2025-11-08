@@ -2,21 +2,39 @@ locals {
   elements           = split("/", trimsuffix(var.code_dir, "/"))
   is_go_build_lambda = var.runtime == "provided.al2" && var.handler == null
   is_linux           = data.uname.localhost.operating_system != "windows"
+  build_output_file  = "./tf_generated/${var.name}/bootstrap"
+  build_tags         = join(" ", var.go_build_tags)
 
-  abs_code_dir      = abspath(var.code_dir)
-  build_output_dir  = abspath("./tf_generated/${var.name}")
-  build_output_file = "${local.build_output_dir}/bootstrap"
-  temp_bootstrap    = "bootstrap_${var.name}"
-  build_tags        = join(" ", var.go_build_tags)
-
-  # Construct ldflags string from map
   base_ldflags     = "-s -w"
   x_flags          = [for key, value in var.go_additional_ldflags : "-X ${key}=${value}"]
   custom_ldflags   = join(" ", local.x_flags)
   combined_ldflags = local.custom_ldflags != "" ? "${local.base_ldflags} ${local.custom_ldflags}" : local.base_ldflags
 
-  # Build in module dir, then move to target location
-  build_command = local.is_linux ? "cd \"${local.abs_code_dir}\" && go mod tidy && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOFLAGS=-trimpath go build -mod=readonly -ldflags='${local.combined_ldflags}' -tags \"${local.build_tags}\" -o \"${local.temp_bootstrap}\" . && mkdir -p \"${local.build_output_dir}\" && mv \"${local.temp_bootstrap}\" \"${local.build_output_file}\"" : "cd \"${local.abs_code_dir}\"; $Env:GOOS=\"linux\"; $Env:GOARCH=\"amd64\"; go mod tidy; go build -ldflags='${local.combined_ldflags}' -tags \"${local.build_tags}\" -o \"${local.temp_bootstrap}\" .; New-Item -ItemType Directory -Force -Path \"${local.build_output_dir}\" | Out-Null; Move-Item -Force \"${local.temp_bootstrap}\" \"${local.build_output_file}\""
+  # Make absolute, forward-slashed paths for Windows robustness
+  abs_code_dir     = replace(abspath(var.code_dir), "\\", "/")
+  abs_build_output = replace(abspath(local.build_output_file), "\\", "/")
+
+  linux_command = <<EOT
+    cd "${local.abs_code_dir}" && \
+    go mod tidy && \
+    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o "${local.abs_build_output}" \
+      -mod=readonly -trimpath \
+      -ldflags='${local.combined_ldflags}' \
+      -tags "${local.build_tags}" \
+      .
+  EOT
+
+  windows_command = <<EOT
+    Set-Location -Path "${local.abs_code_dir}";
+    go mod tidy;
+    $Env:GOOS="linux"; $Env:GOARCH="amd64"; $Env:CGO_ENABLED="0"; go build -o "${abspath(local.build_output_file)}" `
+      -mod=readonly -trimpath `
+      -ldflags="${local.combined_ldflags}" `
+      -tags "${local.build_tags}" `
+      .
+  EOT
+
+  build_command = local.is_linux ? local.linux_command : local.windows_command
 }
 
 locals {
