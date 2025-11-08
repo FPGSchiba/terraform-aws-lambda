@@ -33,6 +33,7 @@ locals {
       -tags "${local.build_tags}" `
       .
   EOT
+
   build_command = local.is_linux ? local.linux_command : local.windows_command
 }
 
