@@ -126,6 +126,12 @@ resource "aws_lambda_function" "lambda" {
   timeout          = var.timeout
   layers           = var.layer_arns
 
+  logging_config {
+    log_format            = var.json_logging ? "JSON" : "Text"
+    application_log_level = var.app_log_level
+    system_log_level      = var.system_log_level
+  }
+
   dynamic "environment" {
     for_each = length(var.environment_variables) == 0 ? [] : [{}]
     content {
