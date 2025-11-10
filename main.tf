@@ -128,8 +128,8 @@ resource "aws_lambda_function" "lambda" {
 
   logging_config {
     log_format            = var.json_logging ? "JSON" : "Text"
-    application_log_level = var.app_log_level
-    system_log_level      = var.system_log_level
+    application_log_level = var.json_logging ? var.app_log_level : null
+    system_log_level      = var.json_logging ? var.system_log_level : null
   }
 
   dynamic "environment" {
