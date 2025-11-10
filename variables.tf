@@ -53,6 +53,34 @@ variable "enable_tracing" {
   description = "Enable active tracing"
 }
 
+variable "json_logging" {
+  description = "Enable structured JSON logging"
+  type        = bool
+  default     = false
+}
+
+variable "app_log_level" {
+  description = "Log level for the application logs"
+  type        = string
+  default     = "INFO"
+
+  validation {
+    condition     = contains(["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"], var.app_log_level)
+    error_message = "app_log_level must be one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL."
+  }
+}
+
+variable "system_log_level" {
+  description = "Log level for the system logs"
+  type        = string
+  default     = "WARN"
+
+  validation {
+    condition     = contains(["DEBUG", "INFO", "WARN"], var.system_log_level)
+    error_message = "system_log_level must be one of: DEBUG, INFO, WARN."
+  }
+}
+
 variable "security_groups" {
   description = "List of security group rules to apply"
   type = list(object({

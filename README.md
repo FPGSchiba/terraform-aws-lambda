@@ -140,17 +140,20 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_iam_statements"></a> [additional\_iam\_statements](#input\_additional\_iam\_statements) | Additional permissions added to the lambda function | <pre>list(object({<br/>    actions   = list(string)<br/>    resources = list(string)<br/>  }))</pre> | `[]` | no |
+| <a name="input_app_log_level"></a> [app\_log\_level](#input\_app\_log\_level) | Log level for the application logs | `string` | `"INFO"` | no |
 | <a name="input_code_dir"></a> [code\_dir](#input\_code\_dir) | Path to the code directory | `string` | n/a | yes |
 | <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | Enable active tracing | `bool` | `false` | no |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables used by the function | `map(string)` | `{}` | no |
 | <a name="input_go_additional_ldflags"></a> [go\_additional\_ldflags](#input\_go\_additional\_ldflags) | Additional -X ldflags for go build command as key-value pairs (e.g., {"github.com/fpgschiba/volleygoals/router.SelectedHandler" = "GetTeam"}) | `map(string)` | `{}` | no |
 | <a name="input_go_build_tags"></a> [go\_build\_tags](#input\_go\_build\_tags) | Build tags for go build command | `list(string)` | `[]` | no |
 | <a name="input_handler"></a> [handler](#input\_handler) | Lambda handler | `string` | `null` | no |
+| <a name="input_json_logging"></a> [json\_logging](#input\_json\_logging) | Enable structured JSON logging | `bool` | `false` | no |
 | <a name="input_layer_arns"></a> [layer\_arns](#input\_layer\_arns) | Layers attached to the lambda function | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the lambda function | `string` | n/a | yes |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime | `string` | `"provided.al2"` | no |
 | <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of security group rules to apply | <pre>list(object({<br/>    name        = string<br/>    description = string<br/>    rules = list(object({<br/>      type             = string<br/>      from_port        = optional(number)<br/>      to_port          = optional(number)<br/>      ip_protocol      = string<br/>      ipv4_cidr_blocks = list(string)<br/>      ipv6_cidr_blocks = list(string)<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The IDs of the subnets where the lambda function will be deployed | `list(string)` | `[]` | no |
+| <a name="input_system_log_level"></a> [system\_log\_level](#input\_system\_log\_level) | Log level for the system logs | `string` | `"WARN"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to the resources | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Number of seconds, unitl the lmabda timeouts | `number` | `3` | no |
 | <a name="input_vpc_dualstack"></a> [vpc\_dualstack](#input\_vpc\_dualstack) | Whether to deploy the lambda function in a dualstack VPC (IPv4 and IPv6). Only used if vpc\_networked is true. | `bool` | `false` | no |
