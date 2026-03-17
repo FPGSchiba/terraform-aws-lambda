@@ -118,21 +118,21 @@ data "archive_file" "build" {
 
 resource "aws_lambda_function" "lambda" {
   filename = (
-    local.should_build        ? data.archive_file.build[0].output_path :
+    local.should_build ? data.archive_file.build[0].output_path :
     var.pre_built_zip != null ? var.pre_built_zip :
-                                data.archive_file.non_build[0].output_path
+    data.archive_file.non_build[0].output_path
   )
   function_name = var.name
   role          = aws_iam_role.lambda.arn
   handler       = local.is_go_build_lambda ? "bootstrap" : var.handler
   runtime       = var.runtime
   source_code_hash = (
-    local.should_build        ? data.archive_file.build[0].output_base64sha256 :
+    local.should_build ? data.archive_file.build[0].output_base64sha256 :
     var.pre_built_zip != null ? local.pre_built_zip_hash :
-                                data.archive_file.non_build[0].output_base64sha256
+    data.archive_file.non_build[0].output_base64sha256
   )
-  timeout          = var.timeout
-  layers           = var.layer_arns
+  timeout = var.timeout
+  layers  = var.layer_arns
 
   logging_config {
     log_format            = var.json_logging ? "JSON" : "Text"
