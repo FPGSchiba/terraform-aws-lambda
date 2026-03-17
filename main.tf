@@ -84,7 +84,7 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 }
 
 resource "terraform_data" "build" {
-  count = local.is_go_build_lambda ? 1 : 0
+  count = local.should_build ? 1 : 0
 
   triggers_replace = {
     dir_sha1 = sha1(join("", [for f in fileset(var.code_dir, "**") : filesha1("${var.code_dir}/${f}")]))
@@ -105,7 +105,7 @@ data "archive_file" "non_build" {
 }
 
 data "archive_file" "build" {
-  count = local.is_go_build_lambda ? 1 : 0
+  count = local.should_build ? 1 : 0
 
   type        = "zip"
   source_file = local.build_output_file
@@ -117,12 +117,20 @@ data "archive_file" "build" {
 }
 
 resource "aws_lambda_function" "lambda" {
-  filename         = local.is_go_build_lambda ? data.archive_file.build[0].output_path : data.archive_file.non_build[0].output_path
-  function_name    = var.name
-  role             = aws_iam_role.lambda.arn
-  handler          = local.is_go_build_lambda ? "bootstrap" : var.handler
-  runtime          = var.runtime
-  source_code_hash = local.is_go_build_lambda ? data.archive_file.build[0].output_base64sha256 : data.archive_file.non_build[0].output_base64sha256
+  filename = (
+    local.should_build        ? data.archive_file.build[0].output_path :
+    var.pre_built_zip != null ? var.pre_built_zip :
+                                data.archive_file.non_build[0].output_path
+  )
+  function_name = var.name
+  role          = aws_iam_role.lambda.arn
+  handler       = local.is_go_build_lambda ? "bootstrap" : var.handler
+  runtime       = var.runtime
+  source_code_hash = (
+    local.should_build        ? data.archive_file.build[0].output_base64sha256 :
+    var.pre_built_zip != null ? local.pre_built_zip_hash :
+                                data.archive_file.non_build[0].output_base64sha256
+  )
   timeout          = var.timeout
   layers           = var.layer_arns
 
