@@ -147,3 +147,9 @@ variable "go_additional_ldflags" {
   type        = map(string)
   default     = {}
 }
+
+variable "pre_built_zip" {
+  description = "Path to a pre-built zip file to deploy directly. When set, all Go build logic is skipped and this zip is used as the Lambda package. Only valid when runtime == \"provided.al2\" and handler == null."
+  type        = string
+  default     = null
+}
