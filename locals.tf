@@ -1,6 +1,6 @@
 locals {
   elements           = split("/", trimsuffix(var.code_dir, "/"))
-  is_go_build_lambda = var.runtime == "provided.al2" && var.handler == null
+  is_go_build_lambda = contains(["provided.al2", "provided.al2023"], var.runtime) && var.handler == null
   should_build       = local.is_go_build_lambda && var.pre_built_zip == null
   pre_built_zip_hash = var.pre_built_zip != null ? filebase64sha256(var.pre_built_zip) : ""
   is_linux           = data.uname.localhost.operating_system != "windows"
